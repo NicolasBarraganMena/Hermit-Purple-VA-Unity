@@ -11,7 +11,8 @@ public class BoardManager : MonoBehaviour
 
     [Header("Elementos generación nivel")]
     private Transform boardHolder; //Referencia al objeto Mapa
-    [Header ("Baldosas")]
+    private Transform itemHolder; //Referencia a los items
+    [Header ("Elementos del nivel")]
     public GameObject[] floors; 
     public GameObject[] outWalls;
     public GameObject[] walls;
@@ -60,14 +61,15 @@ public class BoardManager : MonoBehaviour
     }
 
     //Poner el objeto en la posicion escogida anteriormente
-    void LayoutObject(GameObject[] items, int min, int max)
+    void LayoutObject(GameObject[] items, int min, int max, Transform itemHolder)
     {
         int objectCount = Random.Range(min, max + 1);
         for(int i = 0; i < objectCount; i++)
         {
             Vector2 randomPosition = RandomPosition();
             GameObject itemChoice = GetElement(items);
-            Instantiate(itemChoice, randomPosition, Quaternion.identity);
+            GameObject instance = Instantiate(itemChoice, randomPosition, Quaternion.identity);
+            instance.transform.SetParent(itemHolder); //Guardar el objeto como hijo del objeto Items
         }
     }
 
@@ -79,13 +81,15 @@ public class BoardManager : MonoBehaviour
         BoardSetup();
         //Generar items en el nivel
         InitializeList();
+        //Crear un objeto que guarde todos los items creados en el nivel
+        itemHolder = new GameObject("Elementos").transform;
         //Generar muros en el nivel
-        LayoutObject(walls, 5, 9);
+        LayoutObject(walls, 5, 9, itemHolder);
         //Generar items en el nivel
-        LayoutObject(items, 1, 5);
+        LayoutObject(items, 1, 5, itemHolder);
         //Generar enemigos en el nivel
         int numberEnemys = (int)Mathf.Log(nivel, 2);
-        LayoutObject(enemys, numberEnemys, numberEnemys);
+        LayoutObject(enemys, numberEnemys, numberEnemys, itemHolder);
         //Generar la puerta de salida
         Instantiate(exit, new Vector2(columnas - 1, filas - 1), Quaternion.identity);
 
