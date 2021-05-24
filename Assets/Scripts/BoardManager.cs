@@ -14,6 +14,10 @@ public class BoardManager : MonoBehaviour
     [Header ("Baldosas")]
     public GameObject[] floors; 
     public GameObject[] outWalls;
+    public GameObject[] walls;
+    public GameObject[] items;
+    public GameObject[] enemys;
+    public GameObject exit;
 
     // Start is called before the first frame update
     void Start()
