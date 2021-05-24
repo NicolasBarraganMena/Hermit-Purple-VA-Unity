@@ -19,6 +19,9 @@ public class BoardManager : MonoBehaviour
     public GameObject[] enemys;
     public GameObject exit;
 
+    //Posiciones disponibles para instanciar objetos
+    private List<Vector2> gridPositions = new List<Vector2>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +34,61 @@ public class BoardManager : MonoBehaviour
         
     }
 
+    //Lista con las posiciones para instanciar items del juego
+    void InitializeList()
+    {
+        gridPositions.Clear();
+        for(int x=1; x<columnas-1; x++)
+        {
+            for (int y = 1; y < columnas - 1; y++)
+            {
+                gridPositions.Add(new Vector2(x, y));
+            }
+        }
+        //Debug.Log("Ya se guardaron las posiciones de los items");
+        //Debug.Log("Posiciones: " + gridPositions.Count);
+    }
+
+    //Obtener una posicion aleatoria para poner un item en ella
+    Vector2 RandomPosition()
+    {
+        int index = Random.Range(0, gridPositions.Count);
+        Vector2 position = gridPositions[index];
+        //Eliminar la posicion de la lista para que no vuelva a poner un objeto en esa misma posicion
+        gridPositions.RemoveAt(index);
+        return position;
+    }
+
+    //Poner el objeto en la posicion escogida anteriormente
+    void LayoutObject(GameObject[] items, int min, int max)
+    {
+        int objectCount = Random.Range(min, max + 1);
+        for(int i = 0; i < objectCount; i++)
+        {
+            Vector2 randomPosition = RandomPosition();
+            GameObject itemChoice = GetElement(items);
+            Instantiate(itemChoice, randomPosition, Quaternion.identity);
+        }
+    }
+
     //Funcion que genera el nivel
-    public void SetupScene()
+    public void SetupScene(int nivel)
     {
         //Debug.Log("SetupScene!");
         //Generar Nivel
         BoardSetup();
+        //Generar items en el nivel
+        InitializeList();
+        //Generar muros en el nivel
+        LayoutObject(walls, 5, 9);
+        //Generar items en el nivel
+        LayoutObject(items, 1, 5);
+        //Generar enemigos en el nivel
+        int numberEnemys = (int)Mathf.Log(nivel, 2);
+        LayoutObject(enemys, numberEnemys, numberEnemys);
+        //Generar la puerta de salida
+        Instantiate(exit, new Vector2(columnas - 1, filas - 1), Quaternion.identity);
+
     }
 
     void BoardSetup()
