@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : Move
 {
@@ -12,6 +13,7 @@ public class Player : Move
     public int puntosEnergia = 20;
     public int puntosMascara = 10;
     public float restartLevelDelay = 1f;
+    public Text energyText; //texto con la energia restante que se ira actualizando en el Canvas
 
     private Animator animator;
     private int energy;
@@ -25,6 +27,8 @@ public class Player : Move
     protected override void Start()
     {
         energy = GameController.instance.playerEnergy;
+        //Mostrar la energia actual
+        energyText.text = "Energia: " + energy;
         base.Start();
     }
 
@@ -47,6 +51,8 @@ public class Player : Move
     protected override void AttemptMove(int xDir, int yDir)
     {
         energy--; //la energia disminuye cuando el jugador se mueve
+        //Mostrar la energia actual
+        energyText.text = "Energia: " + energy;
         base.AttemptMove(xDir, yDir);
         CheckIfGameOver(); //Comprobar si el jugador no ha perdido
         GameController.instance.playerTurn = false; //acabo el movimiento del jugador
@@ -55,7 +61,7 @@ public class Player : Move
     // Update is called once per frame
     void Update()
     {
-        if (!GameController.instance.playerTurn) return; //Si el jugador aun no se puede mover
+        if (!GameController.instance.playerTurn || GameController.instance.doingSetup) return; //Si el jugador aun no se puede mover
 
         //Movimiento jugador
         int horizontal;
@@ -90,6 +96,8 @@ public class Player : Move
     public void LoseEnergy(int damage)
     {
         energy -= damage;
+        //Mostrar la energia actual
+        energyText.text = "-" + damage + ", Energia: " + energy;
         animator.SetTrigger("playerHit");
         CheckIfGameOver();
     }
@@ -104,10 +112,14 @@ public class Player : Move
         }else if (other.CompareTag("Food"))
         {
             energy += puntosMascara;
+            //Mostrar la energia actual
+            energyText.text = "+" + puntosMascara + ", Energia: " + energy;
             other.gameObject.SetActive(false);
         }else if (other.CompareTag("Soda"))
         {
             energy += puntosEnergia;
+            //Mostrar la energia actual
+            energyText.text = "+" + puntosEnergia + ", Energia: " + energy;
             other.gameObject.SetActive(false);
         }
     }
