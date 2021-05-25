@@ -20,6 +20,8 @@ public class Enemy : Move
 
     protected override void Start()
     {
+        //Agregarse a la lista de enemigos
+        GameController.instance.AddEnemyToList(this);
         //Referencia a la posicion del jugador
         target = GameObject.FindGameObjectWithTag("Player").transform;
         base.Start();
@@ -62,6 +64,7 @@ public class Enemy : Move
         if(hitPlayer != null)
         {
             hitPlayer.LoseEnergy(playerDamage);
+            animator.SetTrigger("enemyAttack");
         }
     }
 
