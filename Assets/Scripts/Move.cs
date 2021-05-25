@@ -12,14 +12,14 @@ public abstract class Move : MonoBehaviour
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
 
-    void Awake()
+    protected virtual void Awake()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         moveSpeed = 1f / moveTime;
     }

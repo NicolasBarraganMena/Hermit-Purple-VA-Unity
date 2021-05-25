@@ -11,6 +11,10 @@ public class GameController : MonoBehaviour
     [Header("Generador Niveles")]
     public BoardManager boardScript;
 
+    [Header("Control Niveles")]
+    public int playerEnergy = 100; //energia del jugador para continuar en el calabozo
+    [HideInInspector] public bool playerTurn = true; //el jugador puede moverse
+
     void Awake()
     {
         //Singleton
@@ -45,5 +49,10 @@ public class GameController : MonoBehaviour
     {
         //llamar al metodo Setup Scene en el codigo Board Manager (para generar el nivel)
         boardScript.SetupScene(7);
+    }
+
+    public void GameOver()
+    {
+        enabled = false;
     }
 }
