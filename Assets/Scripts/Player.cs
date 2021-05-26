@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class Player : Move
 {
 
+    [Header ("Sonidos jugador")]
+    public AudioClip maskSound1, maskSound2, ajaSound3, ajaSound4, gameOverSound;
+
     [Header("Control Jugador")]
     public int wallDamage = 1;
     public int puntosEnergia = 20;
@@ -43,6 +46,8 @@ public class Player : Move
     {
         if (energy <= 0)
         {
+            SoundManager.instance.PlaySingle(gameOverSound);
+            SoundManager.instance.musicSource.Stop();
             GameController.instance.GameOver();
         }
     }
@@ -97,7 +102,7 @@ public class Player : Move
     {
         energy -= damage;
         //Mostrar la energia actual
-        energyText.text = "-" + damage + ", Energia: " + energy;
+        energyText.text = "Energia: " + energy;
         animator.SetTrigger("playerHit");
         CheckIfGameOver();
     }
@@ -112,14 +117,18 @@ public class Player : Move
         }else if (other.CompareTag("Food"))
         {
             energy += puntosMascara;
+            SoundManager.instance.RandomizeSfx(maskSound1, maskSound2);
             //Mostrar la energia actual
-            energyText.text = "+" + puntosMascara + ", Energia: " + energy;
+            energyText.text = "Energia: " + energy;
+            animator.SetTrigger("playerHeal");
             other.gameObject.SetActive(false);
         }else if (other.CompareTag("Soda"))
         {
             energy += puntosEnergia;
+            SoundManager.instance.RandomizeSfx(ajaSound3, ajaSound4);
             //Mostrar la energia actual
-            energyText.text = "+" + puntosEnergia + ", Energia: " + energy;
+            energyText.text = "Energia: " + energy;
+            animator.SetTrigger("playerHeal");
             other.gameObject.SetActive(false);
         }
     }

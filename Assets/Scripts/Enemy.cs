@@ -5,6 +5,9 @@ using UnityEngine;
 public class Enemy : Move
 {
 
+    [Header("Sonidos jugador")]
+    public AudioClip attackSound1, attackSound2;
+
     [Header("Control Enemigo")]
     public int playerDamage;
 
@@ -65,6 +68,7 @@ public class Enemy : Move
         {
             hitPlayer.LoseEnergy(playerDamage);
             animator.SetTrigger("enemyAttack");
+            SoundManager.instance.RandomizeSfx(attackSound1, attackSound2);
         }
     }
 
