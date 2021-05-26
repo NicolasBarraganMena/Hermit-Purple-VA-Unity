@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     public BoardManager boardScript;
 
     [Header("Control Niveles")]
+    public int restartDelay = 10; //tiempo para reiniciar el juego
     public float levelDelay = 2f; //tiempo visualización pantalla
     public float turnDelay = 0.1f; //tiempo espera para hacer un movimiento
     public int playerEnergy = 100; //energia del jugador para continuar en el calabozo
@@ -50,11 +51,6 @@ public class GameController : MonoBehaviour
         boardScript = GetComponent<BoardManager>();
     }
 
-    /*Start is called before the first frame update
-    void Start()
-    {
-        InitGame();
-    }*/
 
     // Update is called once per frame
     void Update()
@@ -73,6 +69,7 @@ public class GameController : MonoBehaviour
         levelText = GameObject.Find("Level Text").GetComponent<Text>();
         levelText.text = "Piso " + level;
         levelImage.SetActive(true);
+        SoundManager.instance.musicSource.Play();
         //vaciar la lista de enemigos (cuando se carga un nuevo nivel)
         enemies.Clear();
         //llamar al metodo Setup Scene en el codigo Board Manager (para generar el nivel)
@@ -92,7 +89,14 @@ public class GameController : MonoBehaviour
         levelText.text = "En el piso " + level + " ¡has muerto!";
         background.color = Color.red;
         levelImage.SetActive(true);
+        Invoke("CountdownRestart", restartDelay);
         enabled = false;
+    }
+
+    //Espera para volver a empezar la escena
+    void CountdownRestart()
+    {
+        SceneManager.LoadScene(0);
     }
 
     //Mover los enemigos en secuencia
