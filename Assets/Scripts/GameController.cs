@@ -69,7 +69,11 @@ public class GameController : MonoBehaviour
         levelText = GameObject.Find("Level Text").GetComponent<Text>();
         levelText.text = "Piso " + level;
         levelImage.SetActive(true);
-        SoundManager.instance.musicSource.Play();
+        //reiniciar la musica de fondo de ser necesario
+        if (!SoundManager.instance.musicSource.isPlaying)
+        {
+            SoundManager.instance.musicSource.Play();
+        }
         //vaciar la lista de enemigos (cuando se carga un nuevo nivel)
         enemies.Clear();
         //llamar al metodo Setup Scene en el codigo Board Manager (para generar el nivel)
