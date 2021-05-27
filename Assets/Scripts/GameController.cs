@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
-        levelText.text = "En el piso " + level + " ¡has muerto!";
+        levelText.text = "En el piso " + level + "\n ¡has muerto!";
         background.color = Color.red;
         levelImage.SetActive(true);
         Invoke("CountdownRestart", restartDelay);
